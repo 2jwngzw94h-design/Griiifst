@@ -1,0 +1,52 @@
+body {
+
+margin:0;
+font-family:sans-serif;
+
+}
+
+#header {
+
+display:flex;
+gap:20px;
+align-items:center;
+
+padding:8px;
+background:#f4f4f4;
+
+}
+
+#viewer {
+
+height:70vh;
+
+}
+
+#thumbs {
+
+display:flex;
+gap:4px;
+overflow-x:auto;
+
+padding:5px;
+
+background:#eee;
+
+}
+
+#thumbs img {
+
+height:60px;
+
+}
+
+#message {
+
+position:absolute;
+top:10px;
+left:10px;
+
+background:white;
+padding:6px;
+
+}
