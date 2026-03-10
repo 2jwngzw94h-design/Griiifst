@@ -1,52 +1,122 @@
+html,
 body {
 
 margin:0;
-font-family:sans-serif;
+padding:0;
+height:100%;
+
+background:var(--background-default-grey);
+
+font-family: Marianne, Arial, sans-serif;
 
 }
 
 #header {
 
 display:flex;
-gap:20px;
 align-items:center;
+justify-content:space-between;
 
-padding:8px;
-background:#f4f4f4;
+padding:1rem;
+
+border-bottom:1px solid var(--border-default-grey);
+background:var(--background-default-grey);
+
+}
+
+.header-left {
+
+display:flex;
+flex-direction:column;
+gap:0.2rem;
+
+}
+
+#manifestLabel {
+
+margin:0;
+
+color:var(--text-title-grey);
+
+}
+
+#provider {
+
+margin:0;
+
+color:var(--text-mention-grey);
+
+}
+
+#controls {
+
+display:flex;
+gap:0.5rem;
+
+}
+
+#main {
+
+display:flex;
+flex-direction:column;
+
+height:calc(100vh - 70px);
 
 }
 
 #viewer {
 
-height:70vh;
+flex:1;
+
+background:white;
 
 }
 
 #thumbs {
 
 display:flex;
-gap:4px;
+
+gap:0.5rem;
+
+padding:0.75rem;
+
+background:var(--background-alt-grey);
+
+border-top:1px solid var(--border-default-grey);
+
 overflow-x:auto;
-
-padding:5px;
-
-background:#eee;
 
 }
 
 #thumbs img {
 
-height:60px;
+height:70px;
+
+border-radius:2px;
+
+border:1px solid var(--border-default-grey);
+
+cursor:pointer;
+
+transition:transform 0.15s;
+
+}
+
+#thumbs img:hover {
+
+transform:scale(1.05);
 
 }
 
 #message {
 
 position:absolute;
-top:10px;
-left:10px;
 
-background:white;
-padding:6px;
+bottom:1rem;
+left:1rem;
+
+max-width:420px;
+
+z-index:10;
 
 }
