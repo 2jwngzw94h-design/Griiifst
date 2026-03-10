@@ -20,19 +20,15 @@ function displayViewer(manifestUrl) {
 
   const viewerContainer = document.getElementById("viewer")
 
-  // nettoyage
   viewerContainer.innerHTML = ""
 
   viewerInstance = Mirador.viewer({
-
     id: "viewer",
-
     windows: [
       {
         manifestId: manifestUrl
       }
     ]
-
   })
 
 }
@@ -40,7 +36,7 @@ function displayViewer(manifestUrl) {
 async function loadManifest(url) {
 
   if (!url) {
-    showMessage("Aucun manifest IIIF dans cette ligne")
+    showMessage("Aucun manifest IIIF trouvé")
     return
   }
 
@@ -58,9 +54,13 @@ async function loadManifest(url) {
 
     displayViewer(url)
 
-    displayMetadata(manifest)
+    if (typeof displayMetadata === "function") {
+      displayMetadata(manifest)
+    }
 
-    displayThumbnails(manifest)
+    if (typeof displayThumbnails === "function") {
+      displayThumbnails(manifest)
+    }
 
   }
 
@@ -68,31 +68,48 @@ async function loadManifest(url) {
 
     console.error(err)
 
-    showMessage("Impossible de charger le manifest IIIF")
+    showMessage("Impossible de charger le manifest")
 
   }
 
 }
 
+
+/* --------------------------
+   INITIALISATION GRIST
+--------------------------- */
+
 grist.ready({
 
-  requiredAccess: "read table"
+  requiredAccess: "read table",
+
+  columns: [
+    {
+      name: "manifest",
+      title: "Manifest IIIF",
+      type: "Text"
+    }
+  ]
 
 })
 
-grist.onRecord(async (record) => {
 
-  console.log("Record reçu depuis Grist :", record)
+/* --------------------------
+   RÉCEPTION DES LIGNES
+--------------------------- */
+
+grist.onRecord(async (record, mappings) => {
+
+  console.log("record reçu", record)
 
   if (!record) {
     showMessage("Aucune ligne sélectionnée")
     return
   }
 
-  const manifestUrl =
-    record.manifest_url ||
-    record.manifest ||
-    record.iiif_manifest
+  const manifestColumn = mappings.manifest
+
+  const manifestUrl = record[manifestColumn]
 
   if (!manifestUrl) {
     showMessage("La ligne ne contient pas d'URL de manifest")
@@ -108,6 +125,11 @@ grist.onRecord(async (record) => {
   await loadManifest(manifestUrl)
 
 })
+
+
+/* --------------------------
+   BOUTON OUVRIR MIRADOR
+--------------------------- */
 
 document
   .getElementById("openMirador")
