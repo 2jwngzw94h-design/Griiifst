@@ -1,40 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
+
 <head>
 
 <meta charset="utf-8">
 <title>Grist IIIF Viewer</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- API widget Grist -->
 <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
 
-<link rel="stylesheet"
-href="https://unpkg.com/mirador@latest/dist/css/mirador.min.css">
+<!-- DSFR -->
+<link rel="stylesheet" href="https://unpkg.com/@gouvfr/dsfr/dist/dsfr.min.css">
+<script type="module" src="https://unpkg.com/@gouvfr/dsfr/dist/dsfr.module.min.js"></script>
+<script nomodule src="https://unpkg.com/@gouvfr/dsfr/dist/dsfr.nomodule.min.js"></script>
 
+<!-- Mirador -->
+<link rel="stylesheet" href="https://unpkg.com/mirador@latest/dist/css/mirador.min.css">
 <script src="https://unpkg.com/mirador@latest/dist/mirador.min.js"></script>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
 
-<body>
+<body class="fr-container--fluid">
 
-<div id="header">
+<header id="header" class="fr-container">
 
-<div id="manifestLabel">IIIF Viewer</div>
+<div class="header-left">
 
-<div id="provider"></div>
+<h1 id="manifestLabel" class="fr-h6">
+Visionneuse IIIF
+</h1>
+
+<p id="provider" class="fr-text--sm fr-text-mention--grey">
+</p>
+
+</div>
 
 <div id="controls">
-<button id="openMirador">ouvrir dans Mirador</button>
-</div>
+
+<button
+id="openMirador"
+class="fr-btn fr-btn--secondary fr-btn--sm">
+
+Ouvrir dans Mirador
+
+</button>
 
 </div>
+
+</header>
+
+<main id="main">
 
 <div id="viewer"></div>
 
 <div id="thumbs"></div>
 
-<div id="message"></div>
+<div id="message" class="fr-alert fr-alert--info">
+Sélectionnez une ligne contenant une URL de manifest IIIF
+</div>
+
+</main>
 
 <script src="manifest.js"></script>
 <script src="viewer.js"></script>
