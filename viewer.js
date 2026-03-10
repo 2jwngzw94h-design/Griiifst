@@ -1,46 +1,124 @@
-let currentManifest = null;
-let mappedColumns = {};
+let viewerInstance = null
+let currentManifest = null
 
-function debug(msg, data) {
-  const el = document.getElementById("message");
-  el.style.display = "block";
-  el.innerHTML = `<pre>${msg}\n${data ? JSON.stringify(data, null, 2) : ""}</pre>`;
-  console.log(msg, data);
+function showMessage(msg) {
+
+  const el = document.getElementById("message")
+  el.style.display = "block"
+  el.textContent = msg
+
+}
+
+function hideMessage() {
+
+  const el = document.getElementById("message")
+  el.style.display = "none"
+
+}
+
+function displayViewer(manifestUrl) {
+
+  const viewerContainer = document.getElementById("viewer")
+
+  // nettoyage
+  viewerContainer.innerHTML = ""
+
+  viewerInstance = Mirador.viewer({
+
+    id: "viewer",
+
+    windows: [
+      {
+        manifestId: manifestUrl
+      }
+    ]
+
+  })
+
+}
+
+async function loadManifest(url) {
+
+  if (!url) {
+    showMessage("Aucun manifest IIIF dans cette ligne")
+    return
+  }
+
+  try {
+
+    const res = await fetch(url)
+
+    if (!res.ok) {
+      throw new Error("Manifest inaccessible")
+    }
+
+    const manifest = await res.json()
+
+    hideMessage()
+
+    displayViewer(url)
+
+    displayMetadata(manifest)
+
+    displayThumbnails(manifest)
+
+  }
+
+  catch (err) {
+
+    console.error(err)
+
+    showMessage("Impossible de charger le manifest IIIF")
+
+  }
+
 }
 
 grist.ready({
-  requiredAccess: "read table",
-  columns: [
-    { name: "manifest", title: "Manifest IIIF", type: "Text" }
-  ]
-});
 
-grist.onOptions((options) => {
-  mappedColumns = options?.columns || {};
-  debug("Options / mapping reçus :", mappedColumns);
-});
+  requiredAccess: "read table"
 
-grist.onRecord(async (record, mappings) => {
-  debug("Record reçu :", record);
+})
+
+grist.onRecord(async (record) => {
+
+  console.log("Record reçu depuis Grist :", record)
 
   if (!record) {
-    debug("Aucune ligne sélectionnée.", null);
-    return;
+    showMessage("Aucune ligne sélectionnée")
+    return
   }
 
-  const manifestColId =
-    mappings?.manifest ||
-    mappedColumns?.manifest;
-
-  const manifestUrl = manifestColId ? record[manifestColId] : null;
+  const manifestUrl =
+    record.manifest_url ||
+    record.manifest ||
+    record.iiif_manifest
 
   if (!manifestUrl) {
-    debug("Aucune URL de manifest mappée.", { mappings, record });
-    return;
+    showMessage("La ligne ne contient pas d'URL de manifest")
+    return
   }
 
-  currentManifest = manifestUrl;
-  debug("Manifest trouvé :", { manifestUrl });
+  if (manifestUrl === currentManifest) {
+    return
+  }
 
-  await loadManifest(manifestUrl);
-});
+  currentManifest = manifestUrl
+
+  await loadManifest(manifestUrl)
+
+})
+
+document
+  .getElementById("openMirador")
+  .addEventListener("click", () => {
+
+    if (!currentManifest) return
+
+    const url =
+      "https://projectmirador.org/embed/?iiif-content=" +
+      encodeURIComponent(currentManifest)
+
+    window.open(url, "_blank")
+
+})
