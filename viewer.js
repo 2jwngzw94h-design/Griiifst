@@ -1,26 +1,46 @@
-let viewer = null;
 let currentManifest = null;
+let mappedColumns = {};
+
+function debug(msg, data) {
+  const el = document.getElementById("message");
+  el.style.display = "block";
+  el.innerHTML = `<pre>${msg}\n${data ? JSON.stringify(data, null, 2) : ""}</pre>`;
+  console.log(msg, data);
+}
 
 grist.ready({
-  requiredAccess: 'read table'
+  requiredAccess: "read table",
+  columns: [
+    { name: "manifest", title: "Manifest IIIF", type: "Text" }
+  ]
 });
 
-grist.onRecord(async record => {
+grist.onOptions((options) => {
+  mappedColumns = options?.columns || {};
+  debug("Options / mapping reçus :", mappedColumns);
+});
 
-  if (!record) return;
+grist.onRecord(async (record, mappings) => {
+  debug("Record reçu :", record);
 
-  const manifestUrl =
-    record.manifest_url ||
-    record.manifest ||
-    record.iiif_manifest;
+  if (!record) {
+    debug("Aucune ligne sélectionnée.", null);
+    return;
+  }
+
+  const manifestColId =
+    mappings?.manifest ||
+    mappedColumns?.manifest;
+
+  const manifestUrl = manifestColId ? record[manifestColId] : null;
 
   if (!manifestUrl) {
-    showMessage("Aucun manifest IIIF dans la ligne");
+    debug("Aucune URL de manifest mappée.", { mappings, record });
     return;
   }
 
   currentManifest = manifestUrl;
+  debug("Manifest trouvé :", { manifestUrl });
 
   await loadManifest(manifestUrl);
-
 });
