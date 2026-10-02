@@ -22,9 +22,16 @@ Exemple :
 | id | titre | manifest_url |
 |---|---|---|
 | 1 | Manuscrit A | https://example.org/manifest.json |
-| 2 | Manuscrit B | https://example.org/manifest.json |
 
 La colonne peut avoir **n’importe quel nom**, car le widget utilise le système de **Column Mapping** de Grist.
+
+Exemple d'un jeu de donnée fonctionnel
+
+| id | titre | manifest_url |
+|---|---|---|
+| 1 | Manuscrit indien | [https://example.org/manifest.json](https://iiif.bodleian.ox.ac.uk/iiif/manifest/e32a277e-91e2-4a6d-8ba6-cc4bad230410.json) |
+| 2 | Autoportrait de Van Gogh | [https://example.org/manifest.json](https://iiif.harvardartmuseums.org/manifests/object/299843) |
+| 3 | Mantelet | [https://apicollections.parismusees.paris.fr/iiif/500213020/manifest](https://apicollections.parismusees.paris.fr/iiif/500213020/manifest) |
 
 ---
 
@@ -116,9 +123,6 @@ Il doit pointer vers **la table contenant les manifests**.
 Sinon le widget ne reçoit pas les changements de sélection.
 
 ---
-
-
-
 
 
 ---
